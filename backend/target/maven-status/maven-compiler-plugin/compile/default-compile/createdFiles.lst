@@ -1,3 +1,5 @@
+com\library\util\BarcodeGenerator.class
+com\library\service\BookDataService.class
 com\library\config\DataInitializer.class
 com\library\entity\Book$BookStatus.class
 com\library\LibrarySystemBackendApplication.class
@@ -10,6 +12,7 @@ com\library\controller\BookController.class
 com\library\entity\Book.class
 com\library\config\SecurityConfig.class
 com\library\dto\BookIssueRequest.class
+com\library\controller\BookManagementController.class
 com\library\entity\Transaction$TransactionStatus.class
 com\library\repository\BookRepository.class
 com\library\dto\ApiResponse.class

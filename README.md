@@ -1,70 +1,124 @@
-# Getting Started with Create React App
+# Library Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A complete library management system with RFID integration capabilities, built with React frontend and Spring Boot backend.
 
-## Available Scripts
+## Project Structure
 
-In the project directory, you can run:
+```
+library-system/
+├── frontend/          # React frontend application
+├── backend/           # Spring Boot REST API
+├── database/          # MySQL database scripts
+└── README.md         # This file
+```
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **User Authentication**: JWT-based secure login
+- **Book Management**: Issue and return books with barcode scanning
+- **Transaction Tracking**: Complete history of all book transactions
+- **RFID Integration Ready**: Prepared for RFID card system integration
+- **Responsive Design**: Modern UI with Bootstrap
+- **RESTful API**: Clean backend architecture
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Quick Start
 
-### `npm test`
+### 1. Database Setup
+```bash
+cd database
+mysql -u root -p library_system < setup.sql
+mysql -u root -p library_system < add_my_books.sql
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 2. Backend Setup
+```bash
+cd backend
+# Update application.properties with your database credentials
+mvn spring-boot:run
+```
 
-### `npm run build`
+### 3. Frontend Setup
+```bash
+cd frontend
+npm install
+npm start
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Deployment Guide
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Frontend (Vercel)
+1. Push `frontend/` folder to GitHub repository
+2. Connect to Vercel
+3. Set environment variable: `REACT_APP_API_BASE=https://your-backend-url.com/api`
+4. Deploy
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Backend (Railway/Render)
+1. Push `backend/` folder to GitHub repository
+2. Connect to Railway/Render
+3. Set environment variables:
+   - `DATABASE_URL`: Your MySQL connection string
+   - `JWT_SECRET`: Secure JWT secret
+   - `CORS_ALLOWED_ORIGINS`: Your frontend URL
+4. Deploy
 
-### `npm run eject`
+### Database (PlanetScale/Railway)
+1. Create MySQL database
+2. Run database scripts from `database/` folder
+3. Get connection string for backend
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## RFID Integration
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The system is designed to support RFID card integration:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Database Schema for RFID
+- `rfid_cards` table for card management
+- `rfid_events` table for access logging
+- Secure UID hashing and salt storage
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### RFID Workflow
+1. User taps RFID card at entry point
+2. System validates card against database
+3. User proceeds to web interface for book operations
+4. All transactions are logged with RFID association
 
-## Learn More
+## Environment Variables
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Frontend (.env)
+```env
+REACT_APP_API_BASE=http://localhost:8080/api
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Backend (application.properties)
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/library_system
+spring.datasource.username=root
+spring.datasource.password=your_password
+jwt.secret=your-jwt-secret
+cors.allowed.origins=http://localhost:3000
+```
 
-### Code Splitting
+## API Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- `POST /api/auth/login` - User authentication
+- `POST /api/books/issue` - Issue a book
+- `POST /api/books/return` - Return a book
+- `GET /api/transactions/history` - Transaction history
 
-### Analyzing the Bundle Size
+## Technology Stack
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- **Frontend**: React, Bootstrap, Axios
+- **Backend**: Spring Boot, Spring Security, JWT
+- **Database**: MySQL
+- **Deployment**: Vercel (Frontend), Railway/Render (Backend)
 
-### Making a Progressive Web App
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-### Advanced Configuration
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License.
