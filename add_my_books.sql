@@ -22,3 +22,4 @@ SELECT barcode, title, author, available_copies FROM books ORDER BY barcode;
 
 
 
+
