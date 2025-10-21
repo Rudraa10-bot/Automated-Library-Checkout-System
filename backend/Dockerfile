@@ -26,4 +26,4 @@ RUN mvn clean package -DskipTests
 EXPOSE 8080
 
 # Run the application
-CMD ["java", "-Dserver.port=8080", "-jar", "target/*.jar"]
+CMD java -Dserver.port=${PORT:-8080} -jar target/library-system-backend-0.0.1-SNAPSHOT.jar
