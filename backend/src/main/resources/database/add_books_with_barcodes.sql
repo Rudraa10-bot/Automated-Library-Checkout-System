@@ -1,7 +1,7 @@
 -- Add more books with barcodes to the library system
 -- Run this script to add additional books
 
-USE library_system;
+
 
 -- Insert additional books with unique barcodes
 INSERT IGNORE INTO books (barcode, title, author, isbn, description, total_copies, available_copies, publication_year, publisher) VALUES

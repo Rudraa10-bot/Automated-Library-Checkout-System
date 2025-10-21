@@ -1,7 +1,7 @@
 -- ADD YOUR CUSTOM BOOKS TO THE LIBRARY DATABASE
 -- Replace the values in the examples below with YOUR book details
 
-USE library_system;
+
 
 -- ==============================================
 -- TEMPLATE: Copy and modify this for each book

@@ -1,5 +1,5 @@
 -- Quick script to add CS001 book to your database
-USE library_system;
+
 
 -- Add the CS001 book
 INSERT IGNORE INTO books (barcode, title, author, isbn, description, total_copies, available_copies, publication_year, publisher) 

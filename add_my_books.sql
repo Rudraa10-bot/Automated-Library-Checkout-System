@@ -1,7 +1,7 @@
 -- Add your custom books with barcodes
 -- Replace the values below with your book details
 
-USE library_system;
+
 
 -- Example: Add a Computer Science book with barcode CS001
 INSERT IGNORE INTO books (barcode, title, author, isbn, description, total_copies, available_copies, publication_year, publisher) 

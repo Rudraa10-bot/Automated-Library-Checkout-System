@@ -2,8 +2,7 @@
 -- Run this script to create the database and user
 
 -- Create database
-CREATE DATABASE IF NOT EXISTS library_system;
-USE library_system;
+
 
 -- Create user for the application (optional - you can use root)
 -- CREATE USER 'library_user'@'localhost' IDENTIFIED BY 'library_password';
