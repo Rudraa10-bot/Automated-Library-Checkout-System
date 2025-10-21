@@ -3,7 +3,7 @@ package com.library.controller;
 import com.library.dto.ApiResponse;
 import com.library.dto.LoginRequest;
 import com.library.dto.LoginResponse;
-import com.library.entity.User;
+import com.library.entity.LibraryUser;
 import com.library.security.JwtUtils;
 import com.library.service.UserService;
 import jakarta.validation.Valid;

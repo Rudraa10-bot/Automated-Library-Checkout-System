@@ -1,6 +1,6 @@
 package com.library.service;
 
-import com.library.entity.User;
+import com.library.entity.LibraryUser;
 import com.library.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,20 +22,20 @@ public class UserService implements UserDetailsService {
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        LibraryUser user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
         return user;
     }
     
-    public Optional<User> findByUsername(String username) {
+    public Optional<LibraryUser> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
     
-    public Optional<User> findById(Long id) {
+    public Optional<LibraryUser> findById(Long id) {
         return userRepository.findById(id);
     }
     
-    public User save(User user) {
+    public LibraryUser save(LibraryUser user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -48,14 +48,14 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByEmail(email);
     }
     
-    public User createDefaultUser() {
+    public LibraryUser createDefaultUser() {
         if (!existsByUsername("student1")) {
-            User defaultUser = new User();
+            LibraryUser defaultUser = new LibraryUser();
             defaultUser.setUsername("student1");
             defaultUser.setPassword("pass123");
             defaultUser.setEmail("student1@library.com");
             defaultUser.setFullName("Default Student");
-            defaultUser.setRole(User.Role.STUDENT);
+            defaultUser.setRole(LibraryUser.Role.STUDENT);
             return save(defaultUser);
         }
         return userRepository.findByUsername("student1").orElse(null);

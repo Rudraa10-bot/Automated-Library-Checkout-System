@@ -2,7 +2,7 @@ package com.library.config;
 
 import com.library.service.UserService;
 
-import org.apache.catalina.User;
+import com.library.entity.LibraryUser;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
@@ -30,7 +30,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private void initializeDefaultUser() {
     try {
-        User defaultUser = (User) userService.createDefaultUser();
+        LibraryUser defaultUser = userService.createDefaultUser();
         System.out.println("Default user initialized successfully!");
         System.out.println("Username: " + defaultUser.getUsername());
         System.out.println("Password: pass123"); // Only for testing
