@@ -2,7 +2,7 @@ package com.library.service;
 
 import com.library.dto.TransactionDto;
 import com.library.entity.Transaction;
-import com.library.entity.User;
+import com.library.entity.LibraryLibraryUser;
 import com.library.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,19 +18,19 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
     
-    public List<TransactionDto> getUserHistory(User user) {
-        List<Transaction> transactions = transactionRepository.findUserHistory(user);
+    public List<TransactionDto> getLibraryUserHistory(LibraryUser user) {
+        List<Transaction> transactions = transactionRepository.findLibraryUserHistory(user);
         return transactions.stream()
                 .map(TransactionDto::fromTransaction)
                 .collect(Collectors.toList());
     }
     
-    public List<Transaction> findActiveIssuesByUser(User user) {
-        return transactionRepository.findActiveIssuesByUser(user);
+    public List<Transaction> findActiveIssuesByLibraryUser(LibraryUser user) {
+        return transactionRepository.findActiveIssuesByLibraryUser(user);
     }
     
-    public Long countActiveIssuesByUser(User user) {
-        return transactionRepository.countActiveIssuesByUser(user);
+    public Long countActiveIssuesByLibraryUser(LibraryUser user) {
+        return transactionRepository.countActiveIssuesByLibraryUser(user);
     }
     
     public List<Transaction> findOverdueTransactions() {

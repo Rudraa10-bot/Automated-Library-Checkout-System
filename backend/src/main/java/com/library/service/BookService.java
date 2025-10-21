@@ -3,7 +3,7 @@ package com.library.service;
 import com.library.entity.Book;
 import com.library.entity.BookRequest;
 import com.library.entity.Transaction;
-import com.library.entity.User;
+import com.library.entity.LibraryLibraryUser;
 import com.library.repository.BookRepository;
 import com.library.repository.BookRequestRepository;
 import com.library.repository.TransactionRepository;
@@ -52,7 +52,7 @@ public class BookService {
         return bookOpt.isPresent() && bookOpt.get().isAvailable();
     }
     
-    public Transaction issueBook(User user, String barcode) {
+    public Transaction issueBook(LibraryUser user, String barcode) {
         Book book = findByBarcode(barcode)
                 .orElseThrow(() -> new RuntimeException("Book not found with barcode: " + barcode));
         
@@ -62,9 +62,9 @@ public class BookService {
         
         // Check if user already has this book issued
         Optional<Transaction> existingIssue = transactionRepository
-                .findActiveIssueByUserAndBook(user, book);
+                .findActiveIssueByLibraryUserAndBook(user, book);
         if (existingIssue.isPresent()) {
-            throw new RuntimeException("User already has this book issued");
+            throw new RuntimeException("LibraryUser already has this book issued");
         }
         
         // Issue the book
@@ -73,7 +73,7 @@ public class BookService {
         
         // Create transaction record
         Transaction transaction = new Transaction();
-        transaction.setUser(user);
+        transaction.setLibraryUser(user);
         transaction.setBook(book);
         transaction.setType(Transaction.TransactionType.ISSUE);
         transaction.setStatus(Transaction.TransactionStatus.ACTIVE);
@@ -81,13 +81,13 @@ public class BookService {
         return transactionRepository.save(transaction);
     }
     
-    public Transaction returnBook(User user, String barcode) {
+    public Transaction returnBook(LibraryUser user, String barcode) {
         Book book = findByBarcode(barcode)
                 .orElseThrow(() -> new RuntimeException("Book not found with barcode: " + barcode));
         
         // Find active issue for this user and book
         Transaction activeIssue = transactionRepository
-                .findActiveIssueByUserAndBook(user, book)
+                .findActiveIssueByLibraryUserAndBook(user, book)
                 .orElseThrow(() -> new RuntimeException("No active issue found for this book"));
         
         // Return the book
@@ -107,20 +107,20 @@ public class BookService {
         return returnTransaction;
     }
     
-    public BookRequest requestBook(User user, String barcode) {
+    public BookRequest requestBook(LibraryUser user, String barcode) {
         Book book = findByBarcode(barcode)
                 .orElseThrow(() -> new RuntimeException("Book not found with barcode: " + barcode));
         
         // Check if user already has a pending request for this book
         Optional<BookRequest> existingRequest = bookRequestRepository
-                .findPendingRequestByUserAndBook(user, book);
+                .findPendingRequestByLibraryUserAndBook(user, book);
         if (existingRequest.isPresent()) {
-            throw new RuntimeException("User already has a pending request for this book");
+            throw new RuntimeException("LibraryUser already has a pending request for this book");
         }
         
         // Create book request
         BookRequest bookRequest = new BookRequest();
-        bookRequest.setUser(user);
+        bookRequest.setLibraryUser(user);
         bookRequest.setBook(book);
         bookRequest.setStatus(BookRequest.RequestStatus.PENDING);
         

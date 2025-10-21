@@ -3,9 +3,9 @@ package com.library.controller;
 import com.library.dto.ApiResponse;
 import com.library.dto.TransactionDto;
 import com.library.entity.Transaction;
-import com.library.entity.User;
+import com.library.entity.LibraryLibraryUser;
 import com.library.service.TransactionService;
-import com.library.service.UserService;
+import com.library.service.LibraryUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,15 +22,15 @@ public class TransactionController {
     private TransactionService transactionService;
     
     @Autowired
-    private UserService userService;
+    private LibraryUserService userService;
     
     @GetMapping("/history")
-    public ResponseEntity<ApiResponse<List<TransactionDto>>> getUserHistory(Authentication authentication) {
+    public ResponseEntity<ApiResponse<List<TransactionDto>>> getLibraryUserHistory(Authentication authentication) {
         try {
-            User user = userService.findByUsername(authentication.getName())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
-            List<TransactionDto> history = transactionService.getUserHistory(user);
+            List<TransactionDto> history = transactionService.getLibraryUserHistory(user);
             return ResponseEntity.ok(ApiResponse.success("Transaction history retrieved successfully", history));
             
         } catch (Exception e) {
@@ -42,10 +42,10 @@ public class TransactionController {
     @GetMapping("/active")
     public ResponseEntity<ApiResponse<List<Transaction>>> getActiveIssues(Authentication authentication) {
         try {
-            User user = userService.findByUsername(authentication.getName())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
-            List<Transaction> activeIssues = transactionService.findActiveIssuesByUser(user);
+            List<Transaction> activeIssues = transactionService.findActiveIssuesByLibraryUser(user);
             return ResponseEntity.ok(ApiResponse.success("Active issues retrieved successfully", activeIssues));
             
         } catch (Exception e) {
@@ -57,10 +57,10 @@ public class TransactionController {
     @GetMapping("/count")
     public ResponseEntity<ApiResponse<Long>> getActiveIssuesCount(Authentication authentication) {
         try {
-            User user = userService.findByUsername(authentication.getName())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
-            Long count = transactionService.countActiveIssuesByUser(user);
+            Long count = transactionService.countActiveIssuesByLibraryUser(user);
             return ResponseEntity.ok(ApiResponse.success("Active issues count retrieved successfully", count));
             
         } catch (Exception e) {

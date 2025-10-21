@@ -22,7 +22,7 @@ public class Transaction {
     @NotNull(message = "User is required")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private LibraryUser user;
     
     @NotNull(message = "Book is required")
     @ManyToOne(fetch = FetchType.LAZY)

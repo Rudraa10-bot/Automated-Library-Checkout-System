@@ -6,9 +6,9 @@ import com.library.dto.BookReturnRequest;
 import com.library.dto.TransactionDto;
 import com.library.entity.Book;
 import com.library.entity.Transaction;
-import com.library.entity.User;
+import com.library.entity.LibraryUser;
 import com.library.service.BookService;
-import com.library.service.UserService;
+import com.library.service.LibraryUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class BookController {
     private BookService bookService;
     
     @Autowired
-    private UserService userService;
+    private LibraryUserService userService;
     
     @GetMapping
     public ResponseEntity<ApiResponse<List<Book>>> getAllBooks() {
@@ -77,8 +77,8 @@ public class BookController {
     public ResponseEntity<ApiResponse<TransactionDto>> issueBook(@Valid @RequestBody BookIssueRequest request, 
                                                              Authentication authentication) {
         try {
-            User user = userService.findByUsername(authentication.getName())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
             Transaction transaction = bookService.issueBook(user, request.getBarcode());
             TransactionDto transactionDto = TransactionDto.fromTransaction(transaction);
@@ -94,8 +94,8 @@ public class BookController {
     public ResponseEntity<ApiResponse<TransactionDto>> returnBook(@Valid @RequestBody BookReturnRequest request, 
                                                               Authentication authentication) {
         try {
-            User user = userService.findByUsername(authentication.getName())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
             Transaction transaction = bookService.returnBook(user, request.getBarcode());
             TransactionDto transactionDto = TransactionDto.fromTransaction(transaction);
@@ -111,8 +111,8 @@ public class BookController {
     public ResponseEntity<ApiResponse<String>> requestBook(@Valid @RequestBody BookIssueRequest request, 
                                                            Authentication authentication) {
         try {
-            User user = userService.findByUsername(authentication.getName())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
             bookService.requestBook(user, request.getBarcode());
             return ResponseEntity.ok(ApiResponse.success("Book request submitted successfully"));

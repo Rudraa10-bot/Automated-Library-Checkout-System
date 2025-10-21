@@ -3,14 +3,14 @@ package com.library.controller;
 import com.library.dto.ApiResponse;
 import com.library.dto.LoginRequest;
 import com.library.dto.LoginResponse;
-import com.library.entity.LibraryUser;
+import com.library.entity.LibraryLibraryUser;
 import com.library.security.JwtUtils;
-import com.library.service.UserService;
+import com.library.service.LibraryUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.LibraryUsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     
     @Autowired
-    private UserService userService;
+    private LibraryUserService userService;
     
     @Autowired
     private JwtUtils jwtUtils;
@@ -37,20 +37,20 @@ public class AuthController {
     public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+                    new LibraryUsernamePasswordAuthenticationToken(loginRequest.getLibraryUsername(), loginRequest.getPassword())
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            User user = userService.findByUsername(authentication.getName())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
 
-            String jwt = jwtUtils.generateToken(user.getUsername());
+            String jwt = jwtUtils.generateToken(user.getLibraryUsername());
 
             LoginResponse loginResponse = new LoginResponse(
                     jwt,
                     user.getId(),
-                    user.getUsername(),
+                    user.getLibraryUsername(),
                     user.getEmail(),
                     user.getFullName(),
                     user.getRole().name()
@@ -68,10 +68,10 @@ public class AuthController {
     @PostMapping("/debug-match")
     public ResponseEntity<ApiResponse<String>> debugMatch(@Valid @RequestBody LoginRequest loginRequest) {
         try {
-            User user = userService.findByUsername(loginRequest.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            LibraryUser user = userService.findByLibraryUsername(loginRequest.getLibraryUsername())
+                    .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             boolean matches = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
-            String info = "user=" + user.getUsername() + ", matches=" + matches;
+            String info = "user=" + user.getLibraryUsername() + ", matches=" + matches;
             return ResponseEntity.ok(ApiResponse.success("Password check", info));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(ApiResponse.error("Debug failed: " + e.getMessage()));
@@ -79,11 +79,11 @@ public class AuthController {
     }
     
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<User>> register(@Valid @RequestBody User user) {
+    public ResponseEntity<ApiResponse<LibraryUser>> register(@Valid @RequestBody LibraryUser user) {
         try {
-            if (userService.existsByUsername(user.getUsername())) {
+            if (userService.existsByLibraryUsername(user.getLibraryUsername())) {
                 return ResponseEntity.badRequest()
-                        .body(ApiResponse.error("Username is already taken"));
+                        .body(ApiResponse.error("LibraryUsername is already taken"));
             }
             
             if (userService.existsByEmail(user.getEmail())) {
@@ -91,10 +91,10 @@ public class AuthController {
                         .body(ApiResponse.error("Email is already in use"));
             }
             
-            User savedUser = userService.save(user);
-            savedUser.setPassword(null); // Don't return password
+            LibraryUser savedLibraryUser = userService.save(user);
+            savedLibraryUser.setPassword(null); // Don't return password
             
-            return ResponseEntity.ok(ApiResponse.success("User registered successfully", savedUser));
+            return ResponseEntity.ok(ApiResponse.success("LibraryUser registered successfully", savedLibraryUser));
             
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -103,10 +103,10 @@ public class AuthController {
     }
     
     @PostMapping("/init")
-    public ResponseEntity<ApiResponse<String>> initializeDefaultUser() {
+    public ResponseEntity<ApiResponse<String>> initializeDefaultLibraryUser() {
         try {
-            User defaultUser = userService.createDefaultUser();
-            if (defaultUser != null) {
+            LibraryUser defaultLibraryUser = userService.createDefaultLibraryUser();
+            if (defaultLibraryUser != null) {
                 return ResponseEntity.ok(ApiResponse.success("Default user created successfully"));
             } else {
                 return ResponseEntity.ok(ApiResponse.success("Default user already exists"));
