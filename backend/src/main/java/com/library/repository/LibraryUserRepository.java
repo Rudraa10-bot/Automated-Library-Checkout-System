@@ -1,6 +1,6 @@
 package com.library.repository;
 
-import com.library.entity.LibraryLibraryUser;
+import com.library.entity.LibraryUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface LibraryUserRepository extends JpaRepository<LibraryLibraryUser, Long> {
+public interface LibraryUserRepository extends JpaRepository<LibraryUser, Long> {
     
-    Optional<LibraryLibraryUser> findByLibraryUsername(String username);
+    Optional<LibraryUser> findByLibraryUsername(String username);
     
-    Optional<LibraryLibraryUser> findByEmail(String email);
+    Optional<LibraryUser> findByEmail(String email);
     
     boolean existsByLibraryUsername(String username);
     

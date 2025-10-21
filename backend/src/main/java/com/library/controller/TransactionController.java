@@ -3,9 +3,9 @@ package com.library.controller;
 import com.library.dto.ApiResponse;
 import com.library.dto.TransactionDto;
 import com.library.entity.Transaction;
-import com.library.entity.LibraryLibraryUser;
+import com.library.entity.LibraryUser;
 import com.library.service.TransactionService;
-import com.library.service.LibraryUserService;
+import com.library.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,7 +22,7 @@ public class TransactionController {
     private TransactionService transactionService;
     
     @Autowired
-    private LibraryUserService userService;
+    private UserService userService;
     
     @GetMapping("/history")
     public ResponseEntity<ApiResponse<List<TransactionDto>>> getLibraryUserHistory(Authentication authentication) {

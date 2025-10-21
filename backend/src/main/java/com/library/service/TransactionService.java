@@ -2,7 +2,7 @@ package com.library.service;
 
 import com.library.dto.TransactionDto;
 import com.library.entity.Transaction;
-import com.library.entity.LibraryLibraryUser;
+import com.library.entity.LibraryUser;
 import com.library.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

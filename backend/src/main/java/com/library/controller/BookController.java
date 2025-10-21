@@ -8,7 +8,7 @@ import com.library.entity.Book;
 import com.library.entity.Transaction;
 import com.library.entity.LibraryUser;
 import com.library.service.BookService;
-import com.library.service.LibraryUserService;
+import com.library.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class BookController {
     private BookService bookService;
     
     @Autowired
-    private LibraryUserService userService;
+    private UserService userService;
     
     @GetMapping
     public ResponseEntity<ApiResponse<List<Book>>> getAllBooks() {
