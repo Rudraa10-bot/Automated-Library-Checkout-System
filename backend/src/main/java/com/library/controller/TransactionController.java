@@ -25,12 +25,12 @@ public class TransactionController {
     private UserService userService;
     
     @GetMapping("/history")
-    public ResponseEntity<ApiResponse<List<TransactionDto>>> getLibraryUserHistory(Authentication authentication) {
+    public ResponseEntity<ApiResponse<List<TransactionDto>>> getUserHistory(Authentication authentication) {
         try {
-            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+            LibraryUser user = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
-            List<TransactionDto> history = transactionService.getLibraryUserHistory(user);
+            List<TransactionDto> history = transactionService.getUserHistory(user);
             return ResponseEntity.ok(ApiResponse.success("Transaction history retrieved successfully", history));
             
         } catch (Exception e) {
@@ -42,10 +42,10 @@ public class TransactionController {
     @GetMapping("/active")
     public ResponseEntity<ApiResponse<List<Transaction>>> getActiveIssues(Authentication authentication) {
         try {
-            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+            LibraryUser user = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
-            List<Transaction> activeIssues = transactionService.findActiveIssuesByLibraryUser(user);
+            List<Transaction> activeIssues = transactionService.findActiveIssuesByUser(user);
             return ResponseEntity.ok(ApiResponse.success("Active issues retrieved successfully", activeIssues));
             
         } catch (Exception e) {
@@ -57,10 +57,10 @@ public class TransactionController {
     @GetMapping("/count")
     public ResponseEntity<ApiResponse<Long>> getActiveIssuesCount(Authentication authentication) {
         try {
-            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+            LibraryUser user = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
-            Long count = transactionService.countActiveIssuesByLibraryUser(user);
+            Long count = transactionService.countActiveIssuesByUser(user);
             return ResponseEntity.ok(ApiResponse.success("Active issues count retrieved successfully", count));
             
         } catch (Exception e) {

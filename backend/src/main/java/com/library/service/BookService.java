@@ -3,7 +3,7 @@ package com.library.service;
 import com.library.entity.Book;
 import com.library.entity.BookRequest;
 import com.library.entity.Transaction;
-import com.library.entity.LibraryLibraryUser;
+import com.library.entity.LibraryUser;
 import com.library.repository.BookRepository;
 import com.library.repository.BookRequestRepository;
 import com.library.repository.TransactionRepository;
@@ -62,9 +62,9 @@ public class BookService {
         
         // Check if user already has this book issued
         Optional<Transaction> existingIssue = transactionRepository
-                .findActiveIssueByLibraryUserAndBook(user, book);
+                .findActiveIssueByUserAndBook(user, book);
         if (existingIssue.isPresent()) {
-            throw new RuntimeException("LibraryUser already has this book issued");
+            throw new RuntimeException("User already has this book issued");
         }
         
         // Issue the book
@@ -73,7 +73,7 @@ public class BookService {
         
         // Create transaction record
         Transaction transaction = new Transaction();
-        transaction.setLibraryUser(user);
+        transaction.setUser(user);
         transaction.setBook(book);
         transaction.setType(Transaction.TransactionType.ISSUE);
         transaction.setStatus(Transaction.TransactionStatus.ACTIVE);
@@ -87,7 +87,7 @@ public class BookService {
         
         // Find active issue for this user and book
         Transaction activeIssue = transactionRepository
-                .findActiveIssueByLibraryUserAndBook(user, book)
+                .findActiveIssueByUserAndBook(user, book)
                 .orElseThrow(() -> new RuntimeException("No active issue found for this book"));
         
         // Return the book
@@ -113,14 +113,14 @@ public class BookService {
         
         // Check if user already has a pending request for this book
         Optional<BookRequest> existingRequest = bookRequestRepository
-                .findPendingRequestByLibraryUserAndBook(user, book);
+                .findPendingRequestByUserAndBook(user, book);
         if (existingRequest.isPresent()) {
-            throw new RuntimeException("LibraryUser already has a pending request for this book");
+            throw new RuntimeException("User already has a pending request for this book");
         }
         
         // Create book request
         BookRequest bookRequest = new BookRequest();
-        bookRequest.setLibraryUser(user);
+        bookRequest.setUser(user);
         bookRequest.setBook(book);
         bookRequest.setStatus(BookRequest.RequestStatus.PENDING);
         

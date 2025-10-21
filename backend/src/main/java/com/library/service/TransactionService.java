@@ -18,19 +18,19 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
     
-    public List<TransactionDto> getLibraryUserHistory(LibraryUser user) {
-        List<Transaction> transactions = transactionRepository.findLibraryUserHistory(user);
+    public List<TransactionDto> getUserHistory(LibraryUser user) {
+        List<Transaction> transactions = transactionRepository.findUserHistory(user);
         return transactions.stream()
                 .map(TransactionDto::fromTransaction)
                 .collect(Collectors.toList());
     }
     
-    public List<Transaction> findActiveIssuesByLibraryUser(LibraryUser user) {
-        return transactionRepository.findActiveIssuesByLibraryUser(user);
+    public List<Transaction> findActiveIssuesByUser(LibraryUser user) {
+        return transactionRepository.findActiveIssuesByUser(user);
     }
     
-    public Long countActiveIssuesByLibraryUser(LibraryUser user) {
-        return transactionRepository.countActiveIssuesByLibraryUser(user);
+    public Long countActiveIssuesByUser(LibraryUser user) {
+        return transactionRepository.countActiveIssuesByUser(user);
     }
     
     public List<Transaction> findOverdueTransactions() {

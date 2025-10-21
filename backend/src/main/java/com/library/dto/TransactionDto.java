@@ -27,7 +27,7 @@ public class TransactionDto {
     public static TransactionDto fromTransaction(Transaction transaction) {
         TransactionDto dto = new TransactionDto();
         dto.setId(transaction.getId());
-        dto.setLibraryUsername(transaction.getUser().getLibraryUsername());
+        dto.setUsername(transaction.getUser().getUsername());
         dto.setBookTitle(transaction.getBook().getTitle());
         dto.setBookBarcode(transaction.getBook().getBarcode());
         dto.setType(transaction.getType().name());

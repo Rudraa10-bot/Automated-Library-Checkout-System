@@ -14,12 +14,12 @@ import java.util.Optional;
 @Repository
 public interface BookRequestRepository extends JpaRepository<BookRequest, Long> {
     
-    List<BookRequest> findByLibraryUserOrderByRequestDateDesc(LibraryUser user);
+    List<BookRequest> findByUserOrderByRequestDateDesc(LibraryUser user);
     
     List<BookRequest> findByBookOrderByRequestDateDesc(Book book);
     
     @Query("SELECT br FROM BookRequest br WHERE br.user = :user AND br.book = :book AND br.status = 'PENDING'")
-    Optional<BookRequest> findPendingRequestByLibraryUserAndBook(@Param("user") LibraryUser user, @Param("book") Book book);
+    Optional<BookRequest> findPendingRequestByUserAndBook(@Param("user") LibraryUser user, @Param("book") Book book);
     
     @Query("SELECT br FROM BookRequest br WHERE br.book = :book AND br.status = 'PENDING' ORDER BY br.requestDate ASC")
     List<BookRequest> findPendingRequestsByBook(@Param("book") Book book);
@@ -28,7 +28,7 @@ public interface BookRequestRepository extends JpaRepository<BookRequest, Long> 
     List<BookRequest> findAllPendingRequests();
     
     @Query("SELECT br FROM BookRequest br WHERE br.user = :user AND br.status = 'PENDING'")
-    List<BookRequest> findPendingRequestsByLibraryUser(@Param("user") LibraryUser user);
+    List<BookRequest> findPendingRequestsByUser(@Param("user") LibraryUser user);
     
     @Query("SELECT br FROM BookRequest br WHERE br.status = 'NOTIFIED'")
     List<BookRequest> findAllNotifiedRequests();

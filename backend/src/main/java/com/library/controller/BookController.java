@@ -77,7 +77,7 @@ public class BookController {
     public ResponseEntity<ApiResponse<TransactionDto>> issueBook(@Valid @RequestBody BookIssueRequest request, 
                                                              Authentication authentication) {
         try {
-            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+            LibraryUser user = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
             Transaction transaction = bookService.issueBook(user, request.getBarcode());
@@ -94,7 +94,7 @@ public class BookController {
     public ResponseEntity<ApiResponse<TransactionDto>> returnBook(@Valid @RequestBody BookReturnRequest request, 
                                                               Authentication authentication) {
         try {
-            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+            LibraryUser user = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
             Transaction transaction = bookService.returnBook(user, request.getBarcode());
@@ -111,7 +111,7 @@ public class BookController {
     public ResponseEntity<ApiResponse<String>> requestBook(@Valid @RequestBody BookIssueRequest request, 
                                                            Authentication authentication) {
         try {
-            LibraryUser user = userService.findByLibraryUsername(authentication.getName())
+            LibraryUser user = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
             
             bookService.requestBook(user, request.getBarcode());
