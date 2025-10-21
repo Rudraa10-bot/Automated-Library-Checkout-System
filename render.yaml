@@ -1,9 +1,7 @@
 services:
   - type: web
     name: library-backend
-    runtime: java
-    rootDir: backend
-    buildCommand: mvn clean package -DskipTests
-    startCommand: java -Dserver.port=$PORT -jar target/*.jar
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
     plan: free
-    env: java17
