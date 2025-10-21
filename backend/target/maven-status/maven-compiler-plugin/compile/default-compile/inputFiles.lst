@@ -7,12 +7,12 @@ C:\ZProjects\library-system\backend\src\main\java\com\library\entity\BookRequest
 C:\ZProjects\library-system\backend\src\main\java\com\library\util\BarcodeGenerator.java
 C:\ZProjects\library-system\backend\src\main\java\com\library\repository\UserRepository.java
 C:\ZProjects\library-system\backend\src\main\java\com\library\entity\Book.java
+C:\ZProjects\library-system\backend\src\main\java\com\library\entity\LibraryUser.java
 C:\ZProjects\library-system\backend\src\main\java\com\library\repository\TransactionRepository.java
 C:\ZProjects\library-system\backend\src\main\java\com\library\repository\BookRequestRepository.java
 C:\ZProjects\library-system\backend\src\main\java\com\library\dto\BookReturnRequest.java
 C:\ZProjects\library-system\backend\src\main\java\com\library\service\BookService.java
 C:\ZProjects\library-system\backend\src\main\java\com\library\service\BookDataService.java
-C:\ZProjects\library-system\backend\src\main\java\com\library\entity\User.java
 C:\ZProjects\library-system\backend\src\main\java\com\library\security\JwtAuthenticationFilter.java
 C:\ZProjects\library-system\backend\src\main\java\com\library\dto\LoginRequest.java
 C:\ZProjects\library-system\backend\src\main\java\com\library\dto\ApiResponse.java

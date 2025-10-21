@@ -5,6 +5,7 @@ com\library\entity\Book$BookStatus.class
 com\library\LibrarySystemBackendApplication.class
 com\library\security\JwtAuthenticationFilter.class
 com\library\service\BookService.class
+com\library\entity\LibraryUser$Role.class
 com\library\controller\TransactionController.class
 com\library\dto\TransactionDto.class
 com\library\entity\Transaction$TransactionType.class
@@ -24,11 +25,10 @@ com\library\entity\BookRequest.class
 com\library\controller\AuthController.class
 com\library\dto\LoginResponse.class
 com\library\security\JwtUtils.class
-com\library\entity\User$Role.class
 com\library\repository\TransactionRepository.class
 com\library\service\UserService.class
 com\library\entity\Transaction.class
 com\library\dto\BookReturnRequest.class
 com\library\repository\BookRequestRepository.class
 com\library\entity\BookRequest$RequestStatus.class
-com\library\entity\User.class
+com\library\entity\LibraryUser.class
