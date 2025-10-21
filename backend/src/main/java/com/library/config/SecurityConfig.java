@@ -58,15 +58,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/books/available").permitAll()
-                .requestMatchers("/api/books/search").permitAll()
-                .requestMatchers("/api/books/check-availability/**").permitAll()
-                .requestMatchers("/api/books/barcode/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .authenticationProvider(authenticationProvider(userDetailsService))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .anyRequest().permitAll()  // Temporarily permit all for debugging
+            );
         
         return http.build();
     }
