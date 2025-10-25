@@ -49,6 +49,9 @@ public class LibraryUser implements UserDetails {
     @Column(nullable = false)
     private Role role = Role.STUDENT;
     
+    @Column(name = "rfid_tag", unique = true)
+    private String rfidTag;
+    
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
