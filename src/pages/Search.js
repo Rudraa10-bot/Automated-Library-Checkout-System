@@ -8,6 +8,8 @@ export default function Search() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(true);
 
   const runSearch = async () => {
     setLoading(true);
@@ -26,10 +28,19 @@ export default function Search() {
   const onKeyDown = (e) => { if (e.key === 'Enter') runSearch(); };
 
   const addWishlist = async (barcode) => {
-    await WishlistApi.add(barcode);
-    // notify other components (e.g., ProfileMenu) to reload
-    window.dispatchEvent(new CustomEvent('wishlist:updated'));
-    alert("Added to wishlist");
+    try {
+      await WishlistApi.add(barcode);
+      // notify other components (e.g., ProfileMenu) to reload
+      window.dispatchEvent(new CustomEvent('wishlist:updated'));
+      setIsSuccess(true);
+      setMessage("Added to wishlist");
+    } catch (e) {
+      setIsSuccess(false);
+      setMessage(e.message || "Failed to add to wishlist");
+    } finally {
+      // auto hide
+      setTimeout(() => setMessage(""), 3000);
+    }
   };
 
   return (
@@ -41,6 +52,12 @@ export default function Search() {
         </button>
         <h2 className="mb-0">Search Books</h2>
       </div>
+      {message && (
+        <div className={`alert ${isSuccess ? 'alert-success' : 'alert-danger'} mb-3`} role="alert">
+          {isSuccess ? <i className="bi bi-check-circle-fill me-2"></i> : <i className="bi bi-exclamation-triangle-fill me-2"></i>}
+          {message}
+        </div>
+      )}
       <div className="card p-3 mb-3">
         <div className="input-group">
           <span className="input-group-text"><i className="bi bi-search"></i></span>
