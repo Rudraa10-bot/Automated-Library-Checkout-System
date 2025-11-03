@@ -1,28 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { BooksApi, RecommendationsApi, WishlistApi, ReviewsApi } from "../api";
+import React, { useState } from "react";
+import { BooksApi, WishlistApi } from "../api";
 
 export default function Search() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
-  const [filters, setFilters] = useState({ availableOnly: true, yearFrom: "", yearTo: "", sortBy: "title", order: "asc" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  async function runSearch() {
-    const params = {
-      query,
-      availableOnly: filters.availableOnly,
-      yearFrom: filters.yearFrom || undefined,
-      yearTo: filters.yearTo || undefined,
-      sortBy: filters.sortBy,
-      order: filters.order,
-    };
-    const res = await BooksApi.advancedSearch(params);
-    setResults(res?.data || []);
-  }
+  const runSearch = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await BooksApi.search(query.trim());
+      setResults(res?.data || []);
+    } catch (e) {
+      setError(e.message || "Search failed");
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  useEffect(() => {
-    runSearch();
-    // eslint-disable-next-line
-  }, []);
+  const onKeyDown = (e) => { if (e.key === 'Enter') runSearch(); };
 
   const addWishlist = async (barcode) => {
     await WishlistApi.add(barcode);
@@ -33,37 +32,20 @@ export default function Search() {
     <div className="container mt-4">
       <h2>Search Books</h2>
       <div className="card p-3 mb-3">
-        <div className="row g-2">
-          <div className="col-md-4">
-            <input className="form-control" placeholder="Title, author, ISBN" value={query} onChange={(e)=>setQuery(e.target.value)} />
-          </div>
-          <div className="col-md-2">
-            <input className="form-control" type="number" placeholder="Year from" value={filters.yearFrom} onChange={e=>setFilters({...filters, yearFrom: e.target.value})} />
-          </div>
-          <div className="col-md-2">
-            <input className="form-control" type="number" placeholder="Year to" value={filters.yearTo} onChange={e=>setFilters({...filters, yearTo: e.target.value})} />
-          </div>
-          <div className="col-md-2">
-            <select className="form-select" value={filters.sortBy} onChange={e=>setFilters({...filters, sortBy: e.target.value})}>
-              <option value="title">Title</option>
-              <option value="author">Author</option>
-              <option value="year">Year</option>
-            </select>
-          </div>
-          <div className="col-md-2">
-            <select className="form-select" value={filters.order} onChange={e=>setFilters({...filters, order: e.target.value})}>
-              <option value="asc">Asc</option>
-              <option value="desc">Desc</option>
-            </select>
-          </div>
+        <div className="input-group">
+          <span className="input-group-text"><i className="bi bi-search"></i></span>
+          <input
+            className="form-control"
+            placeholder="Type book title or author and press Enter or Search"
+            value={query}
+            onChange={(e)=>setQuery(e.target.value)}
+            onKeyDown={onKeyDown}
+          />
+          <button className="btn btn-primary" onClick={runSearch} disabled={loading}>
+            {loading ? 'Searching...' : 'Search'}
+          </button>
         </div>
-        <div className="form-check mt-2">
-          <input className="form-check-input" type="checkbox" id="available" checked={filters.availableOnly} onChange={e=>setFilters({...filters, availableOnly: e.target.checked})} />
-          <label className="form-check-label" htmlFor="available">Only show available</label>
-        </div>
-        <div className="mt-2">
-          <button className="btn btn-primary" onClick={runSearch}>Search</button>
-        </div>
+        {error && <div className="alert alert-danger mt-2">{error}</div>}
       </div>
 
       <div className="row">
@@ -82,6 +64,9 @@ export default function Search() {
             </div>
           </div>
         ))}
+        {!loading && results.length === 0 && (
+          <div className="col-12 text-muted">No results. Try a common word, e.g., "web", "java", or an author name.</div>
+        )}
       </div>
     </div>
   );
