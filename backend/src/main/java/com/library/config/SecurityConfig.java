@@ -61,6 +61,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/books/available").permitAll()
                 .requestMatchers("/api/books/search").permitAll()
+                .requestMatchers("/api/discover").permitAll()
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider(userDetailsService))

@@ -8,11 +8,13 @@ import AnimatedBackground from "./components/AnimatedBackground";
 import Search from "./pages/Search";
 import Discover from "./pages/Discover";
 import ThemeToggle from "./components/ThemeToggle";
+import ProfileMenu from "./components/ProfileMenu";
 
 function App() {
   return (
     <Router>
       <AnimatedBackground />
+      <ProfileMenu />
       <Routes>
         <Route path="/" element={<Login />} />
 
