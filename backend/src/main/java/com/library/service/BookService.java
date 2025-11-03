@@ -27,6 +27,9 @@ public class BookService {
     @Autowired
     private BookRequestRepository bookRequestRepository;
     
+    @Autowired
+    private UserService userService;
+    
     public Optional<Book> findByBarcode(String barcode) {
         return bookRepository.findByBarcode(barcode);
     }
@@ -41,6 +44,30 @@ public class BookService {
     
     public List<Book> searchBooks(String searchTerm) {
         return bookRepository.searchBooks(searchTerm);
+    }
+
+    public List<Book> advancedSearch(String query, Boolean availableOnly, Integer yearFrom, Integer yearTo, String sortBy, String order) {
+        List<Book> base = (query == null || query.isBlank()) ? bookRepository.findAll() : bookRepository.searchBooks(query);
+        return base.stream()
+                .filter(b -> availableOnly == null || !availableOnly || b.isAvailable())
+                .filter(b -> yearFrom == null || (b.getPublicationYear() != null && b.getPublicationYear() >= yearFrom))
+                .filter(b -> yearTo == null || (b.getPublicationYear() != null && b.getPublicationYear() <= yearTo))
+                .sorted((a,b) -> {
+                    int cmp = 0;
+                    String sb = (sortBy == null) ? "title" : sortBy;
+                    switch (sb) {
+                        case "author" -> cmp = a.getAuthor().compareToIgnoreCase(b.getAuthor());
+                        case "year" -> {
+                            Integer ay = a.getPublicationYear() == null ? 0 : a.getPublicationYear();
+                            Integer by = b.getPublicationYear() == null ? 0 : b.getPublicationYear();
+                            cmp = ay.compareTo(by);
+                        }
+                        default -> cmp = a.getTitle().compareToIgnoreCase(b.getTitle());
+                    }
+                    boolean desc = "desc".equalsIgnoreCase(order);
+                    return desc ? -cmp : cmp;
+                })
+                .toList();
     }
     
     public Book save(Book book) {
@@ -78,6 +105,9 @@ public class BookService {
         transaction.setType(Transaction.TransactionType.ISSUE);
         transaction.setStatus(Transaction.TransactionStatus.ACTIVE);
         
+        // Gamification: award points for issuing a book
+        userService.addPoints(user, 10);
+        
         return transactionRepository.save(transaction);
     }
     
@@ -100,6 +130,9 @@ public class BookService {
         activeIssue.setReturnDate(java.time.LocalDateTime.now());
         
         Transaction returnTransaction = transactionRepository.save(activeIssue);
+        
+        // Gamification: award points for return
+        userService.addPoints(user, 5);
         
         // Check for pending requests and notify users
         notifyPendingRequests(book);

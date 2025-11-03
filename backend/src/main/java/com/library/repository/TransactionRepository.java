@@ -36,6 +36,19 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     
     @Query("SELECT t FROM Transaction t WHERE t.user = :user ORDER BY t.transactionDate DESC")
     List<Transaction> findUserHistory(@Param("user") LibraryUser user);
+    
+    // Analytics and recommendations
+    @Query("SELECT t.book.id, COUNT(t) FROM Transaction t WHERE t.type = 'ISSUE' GROUP BY t.book.id ORDER BY COUNT(t) DESC")
+    List<Object[]> findTopBooksOverall();
+
+    @Query("SELECT t.book.id, COUNT(t) FROM Transaction t WHERE t.type = 'ISSUE' AND t.transactionDate >= :since GROUP BY t.book.id ORDER BY COUNT(t) DESC")
+    List<Object[]> findTopBooksSince(@Param("since") LocalDateTime since);
+
+    @Query("SELECT DISTINCT t.book.author FROM Transaction t WHERE t.user = :user AND t.type = 'ISSUE'")
+    List<String> findDistinctAuthorsBorrowedByUser(@Param("user") LibraryUser user);
+
+    @Query("SELECT DISTINCT t.book.id FROM Transaction t WHERE t.user = :user")
+    List<Long> findDistinctBookIdsBorrowedByUser(@Param("user") LibraryUser user);
 }
 
 

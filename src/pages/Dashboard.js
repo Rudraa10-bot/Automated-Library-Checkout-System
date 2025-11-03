@@ -62,6 +62,28 @@ export default function Dashboard() {
             <h4>Return Book</h4>
           </div>
         </div>
+
+        {/* Search Card */}
+        <div className="col-md-3 mb-4">
+          <div
+            className="dashboard-card gradient-card shadow-lg p-5"
+            onClick={() => navigate("/search")}
+          >
+            <i className="bi bi-search fs-1 mb-2"></i>
+            <h4>Search</h4>
+          </div>
+        </div>
+
+        {/* Discover Card */}
+        <div className="col-md-3 mb-4">
+          <div
+            className="dashboard-card gradient-card shadow-lg p-5"
+            onClick={() => navigate("/discover")}
+          >
+            <i className="bi bi-stars fs-1 mb-2"></i>
+            <h4>Discover</h4>
+          </div>
+        </div>
       </div>
 
       <div className="mt-4">

@@ -7,8 +7,10 @@ import com.library.dto.TransactionDto;
 import com.library.entity.Book;
 import com.library.entity.Transaction;
 import com.library.entity.LibraryUser;
+import com.library.entity.BookRequest;
 import com.library.service.BookService;
 import com.library.service.UserService;
+import com.library.repository.BookRequestRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,9 @@ public class BookController {
     
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private BookRequestRepository bookRequestRepository;
     
     @GetMapping
     public ResponseEntity<ApiResponse<List<Book>>> getAllBooks() {
@@ -58,6 +63,23 @@ public class BookController {
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("Search failed: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/advanced-search")
+    public ResponseEntity<ApiResponse<List<Book>>> advancedSearch(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) Boolean availableOnly,
+            @RequestParam(required = false) Integer yearFrom,
+            @RequestParam(required = false) Integer yearTo,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String order
+    ) {
+        try {
+            List<Book> books = bookService.advancedSearch(query, availableOnly, yearFrom, yearTo, sortBy, order);
+            return ResponseEntity.ok(ApiResponse.success("Advanced search results", books));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Advanced search failed: " + e.getMessage()));
         }
     }
     
@@ -120,6 +142,39 @@ public class BookController {
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("Failed to request book: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/requests")
+    public ResponseEntity<ApiResponse<List<BookRequest>>> myBookRequests(Authentication authentication) {
+        try {
+            LibraryUser user = userService.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
+            List<BookRequest> list = bookService.getPendingRequests().stream()
+                    .filter(r -> r.getUser().getId().equals(user.getId()))
+                    .toList();
+            return ResponseEntity.ok(ApiResponse.success("Requests loaded", list));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Failed to load requests: " + e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/requests/{id}")
+    public ResponseEntity<ApiResponse<String>> cancelRequest(@PathVariable Long id, Authentication authentication) {
+        try {
+            LibraryUser user = userService.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("LibraryUser not found"));
+            var opt = bookService.getPendingRequests().stream().filter(r -> r.getId().equals(id)).findFirst();
+            if (opt.isEmpty() || !opt.get().getUser().getId().equals(user.getId())) {
+                return ResponseEntity.status(404).body(ApiResponse.error("Request not found"));
+            }
+            // Soft-cancel by setting status
+            var req = opt.get();
+            req.setStatus(BookRequest.RequestStatus.CANCELLED);
+            bookRequestRepository.save(req);
+            return ResponseEntity.ok(ApiResponse.success("Request cancelled"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Failed to cancel request: " + e.getMessage()));
         }
     }
     

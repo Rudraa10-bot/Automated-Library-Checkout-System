@@ -34,6 +34,14 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     
     @Query("SELECT b FROM Book b WHERE b.barcode IS NULL OR b.barcode = ''")
     List<Book> findBooksWithoutBarcodes();
+
+    // Additional helpers
+    List<Book> findByIdIn(List<Long> ids);
+
+    @Query("SELECT b FROM Book b WHERE b.author IN :authors AND b.id NOT IN :excludeIds")
+    List<Book> findByAuthorsExcluding(@Param("authors") List<String> authors, @Param("excludeIds") List<Long> excludeIds);
+
+    List<Book> findTop20ByOrderByCreatedAtDesc();
 }
 
 

@@ -49,14 +49,15 @@ public class LibraryUser implements UserDetails {
     @Column(nullable = false)
     private Role role = Role.STUDENT;
     
-    @Column(name = "rfid_tag", unique = true)
-    private String rfidTag;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    
+    @Column(name = "points")
+    private Integer points = 0;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Transaction> transactions;

@@ -39,6 +39,37 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
+
+    // Save an existing user without changing password (for updates like points)
+    public LibraryUser saveExisting(LibraryUser user) {
+        return userRepository.save(user);
+    }
+
+    public void addPoints(LibraryUser user, int delta) {
+        if (user == null) return;
+        Integer points = getPoints(user);
+        setPoints(user, points + delta);
+        saveExisting(user);
+    }
+
+    private Integer getPoints(LibraryUser user) {
+        try {
+            var field = LibraryUser.class.getDeclaredField("points");
+            field.setAccessible(true);
+            Object val = field.get(user);
+            return val == null ? 0 : (Integer) val;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private void setPoints(LibraryUser user, int value) {
+        try {
+            var field = LibraryUser.class.getDeclaredField("points");
+            field.setAccessible(true);
+            field.set(user, value);
+        } catch (Exception ignored) {}
+    }
     
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);

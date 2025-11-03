@@ -54,12 +54,68 @@ export const BooksApi = {
       body: JSON.stringify({ barcode }),
     });
   },
+  async search(query) {
+    return apiRequest(`/books/search?query=${encodeURIComponent(query)}`);
+  },
+  async advancedSearch(params = {}) {
+    const qs = new URLSearchParams(params).toString();
+    return apiRequest(`/books/advanced-search?${qs}`);
+  },
+  async myRequests() {
+    return apiRequest(`/books/requests`);
+  },
 };
 
 export const TransactionsApi = {
   async history() {
     return apiRequest("/transactions/history", { method: "GET" });
   },
+};
+
+export const RecommendationsApi = {
+  async me() {
+    return apiRequest("/recommendations/me");
+  },
+  async discover() {
+    return apiRequest("/discover");
+  }
+};
+
+export const ReviewsApi = {
+  async listForBook(bookId) {
+    return apiRequest(`/reviews/book/${bookId}`);
+  },
+  async add(bookId, rating, comment) {
+    const params = new URLSearchParams({ rating, comment: comment || "" }).toString();
+    return apiRequest(`/reviews/book/${bookId}?${params}`, { method: "POST" });
+  }
+};
+
+export const WishlistApi = {
+  async list() {
+    return apiRequest(`/wishlist`);
+  },
+  async add(barcode) {
+    return apiRequest(`/wishlist/${encodeURIComponent(barcode)}`, { method: "POST" });
+  },
+  async remove(barcode) {
+    return apiRequest(`/wishlist/${encodeURIComponent(barcode)}`, { method: "DELETE" });
+  }
+};
+
+export const NotificationsApi = {
+  async list() {
+    return apiRequest(`/notifications`);
+  },
+  async markRead(id) {
+    return apiRequest(`/notifications/${id}/read`, { method: "POST" });
+  }
+};
+
+export const AdminApi = {
+  async analytics() {
+    return apiRequest(`/admin/analytics`);
+  }
 };
 
 

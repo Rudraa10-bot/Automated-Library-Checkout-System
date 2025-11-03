@@ -1,3 +1,27 @@
+/* Dark theme variables */
+body.theme-dark {
+  --bs-body-bg: #0e1116;
+  --bs-body-color: #e6e6e6;
+  background-color: var(--bs-body-bg) !important;
+  color: var(--bs-body-color) !important;
+}
+
+body.theme-dark .card {
+  background-color: #161b22;
+  color: #e6e6e6;
+}
+
+body.theme-dark .form-control, body.theme-dark .form-select {
+  background-color: #0f1420;
+  color: #e6e6e6;
+  border-color: #2d333b;
+}
+
+body.theme-dark .btn-outline-secondary {
+  color: #e6e6e6;
+  border-color: #6c757d;
+}
+
 .App {
   text-align: center;
 }

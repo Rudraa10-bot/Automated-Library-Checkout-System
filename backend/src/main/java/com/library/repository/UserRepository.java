@@ -25,5 +25,4 @@ public interface UserRepository extends JpaRepository<LibraryUser, Long> {
     @Query("SELECT u FROM LibraryUser u WHERE u.email = :email")
     Optional<LibraryUser> findUserByEmail(@Param("email") String email);
     
-    Optional<LibraryUser> findByRfidTag(String rfidTag);
 }

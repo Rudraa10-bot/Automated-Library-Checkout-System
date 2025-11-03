@@ -1,6 +1,6 @@
 # Library Management System
 
-A complete library management system with RFID integration capabilities, built with React frontend and Spring Boot backend.
+A complete library management system built with React frontend and Spring Boot backend.
 
 ## Project Structure
 
@@ -17,7 +17,6 @@ library-system/
 - **User Authentication**: JWT-based secure login
 - **Book Management**: Issue and return books with barcode scanning
 - **Transaction Tracking**: Complete history of all book transactions
-- **RFID Integration Ready**: Prepared for RFID card system integration
 - **Responsive Design**: Modern UI with Bootstrap
 - **RESTful API**: Clean backend architecture
 
@@ -66,20 +65,6 @@ npm start
 2. Run database scripts from `database/` folder
 3. Get connection string for backend
 
-## RFID Integration
-
-The system is designed to support RFID card integration:
-
-### Database Schema for RFID
-- `rfid_cards` table for card management
-- `rfid_events` table for access logging
-- Secure UID hashing and salt storage
-
-### RFID Workflow
-1. User taps RFID card at entry point
-2. System validates card against database
-3. User proceeds to web interface for book operations
-4. All transactions are logged with RFID association
 
 ## Environment Variables
 

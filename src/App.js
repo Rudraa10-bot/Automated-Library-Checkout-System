@@ -5,6 +5,9 @@ import IssueBook from "./pages/IssueBook";
 import ReturnBook from "./pages/ReturnBook";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AnimatedBackground from "./components/AnimatedBackground";
+import Search from "./pages/Search";
+import Discover from "./pages/Discover";
+import ThemeToggle from "./components/ThemeToggle";
 
 function App() {
   return (
@@ -39,7 +42,27 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/search"
+          element={
+            <ProtectedRoute>
+              <Search />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/discover"
+          element={
+            <ProtectedRoute>
+              <Discover />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
+      {/* Theme Toggle */}
+      <ThemeToggle />
     </Router>
   );
 }
