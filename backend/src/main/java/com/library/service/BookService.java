@@ -43,7 +43,8 @@ public class BookService {
     }
     
     public List<Book> searchBooks(String searchTerm) {
-        return bookRepository.searchBooks(searchTerm);
+        String q = (searchTerm == null) ? "" : searchTerm.toLowerCase();
+        return bookRepository.searchBooks(q);
     }
 
     public List<Book> advancedSearch(String query, Boolean availableOnly, Integer yearFrom, Integer yearTo, String sortBy, String order) {

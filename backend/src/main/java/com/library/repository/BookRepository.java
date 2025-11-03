@@ -29,8 +29,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT b FROM Book b WHERE b.availableCopies = 0 OR b.status = 'UNAVAILABLE'")
     List<Book> findUnavailableBooks();
     
-    @Query("SELECT b FROM Book b WHERE b.title LIKE %:searchTerm% OR b.author LIKE %:searchTerm% OR b.isbn LIKE %:searchTerm%")
-    List<Book> searchBooks(@Param("searchTerm") String searchTerm);
+    @Query("SELECT b FROM Book b WHERE LOWER(b.title) LIKE %:q% OR LOWER(b.author) LIKE %:q% OR LOWER(b.isbn) LIKE %:q% OR LOWER(b.barcode) LIKE %:q%")
+    List<Book> searchBooks(@Param("q") String q);
     
     @Query("SELECT b FROM Book b WHERE b.barcode IS NULL OR b.barcode = ''")
     List<Book> findBooksWithoutBarcodes();

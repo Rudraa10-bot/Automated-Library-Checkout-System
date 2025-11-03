@@ -52,6 +52,14 @@ SELECT barcode, title, author, available_copies
 FROM books 
 ORDER BY barcode;
 
+-- New Arrivals (5 copies each)
+INSERT IGNORE INTO books (barcode, title, author, isbn, description, total_copies, available_copies, publication_year, publisher) VALUES
+('NEWWEB001', 'Web Performance in Action', 'Jeremy L. Wagner', '9781617293771', 'Fast websites and performance patterns', 5, 5, 2021, 'Manning Publications'),
+('NEWWEB002', 'CSS Secrets', 'Lea Verou', '9781449372637', 'Better solutions to everyday web design problems', 5, 5, 2015, 'O\'Reilly Media'),
+('NEWWEB003', 'You Don\'t Know JS Yet: Scope & Closures', 'Kyle Simpson', '9781098124045', 'Deep-dive into JS fundamentals', 5, 5, 2020, 'O\'Reilly Media'),
+('NEWWEB004', 'HTTP/2 in Action', 'Barry Pollard', '9781617295164', 'Modern web protocols for speed', 5, 5, 2019, 'Manning Publications'),
+('NEWWEB005', 'Progressive Web Apps', 'Tal Ater', '9781491961650', 'Building PWAs for reliable, fast experiences', 5, 5, 2017, 'O\'Reilly Media');
+
 COMMIT;
 
 
