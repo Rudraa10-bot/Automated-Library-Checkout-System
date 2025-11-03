@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BooksApi, WishlistApi } from "../api";
 
 export default function Search() {
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,12 +27,20 @@ export default function Search() {
 
   const addWishlist = async (barcode) => {
     await WishlistApi.add(barcode);
+    // notify other components (e.g., ProfileMenu) to reload
+    window.dispatchEvent(new CustomEvent('wishlist:updated'));
     alert("Added to wishlist");
   };
 
   return (
     <div className="container mt-4">
-      <h2>Search Books</h2>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <button className="btn btn-secondary back-btn" onClick={() => navigate("/dashboard")}>
+          <i className="bi bi-arrow-left me-2"></i>
+          Back to Dashboard
+        </button>
+        <h2 className="mb-0">Search Books</h2>
+      </div>
       <div className="card p-3 mb-3">
         <div className="input-group">
           <span className="input-group-text"><i className="bi bi-search"></i></span>

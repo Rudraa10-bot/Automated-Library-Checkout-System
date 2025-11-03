@@ -18,6 +18,13 @@ export default function ProfileMenu() {
 
   useEffect(() => { if (open) load(); }, [open]);
 
+  // Listen for wishlist updates from other pages
+  useEffect(() => {
+    const handler = () => { if (open) load(); };
+    window.addEventListener('wishlist:updated', handler);
+    return () => window.removeEventListener('wishlist:updated', handler);
+  }, [open]);
+
   const issueFromWishlist = async (barcode) => {
     await BooksApi.issue(barcode);
     await WishlistApi.remove(barcode);

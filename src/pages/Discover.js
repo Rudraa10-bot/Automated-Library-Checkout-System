@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { RecommendationsApi, WishlistApi, BooksApi } from "../api";
 
 export default function Discover() {
+  const navigate = useNavigate();
   const [data, setData] = useState({ trending: [], newArrivals: [] });
   const [error, setError] = useState("");
 
@@ -57,7 +59,13 @@ export default function Discover() {
 
   return (
     <div className="container mt-4">
-      <h2>Discover</h2>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <button className="btn btn-secondary back-btn" onClick={() => navigate("/dashboard")}>
+          <i className="bi bi-arrow-left me-2"></i>
+          Back to Dashboard
+        </button>
+        <h2 className="mb-0">Discover</h2>
+      </div>
       {error && <div className="alert alert-warning">{error}</div>}
       <Section title="Trending" items={data.trending} />
       <Section title="New Arrivals" items={data.newArrivals} />
