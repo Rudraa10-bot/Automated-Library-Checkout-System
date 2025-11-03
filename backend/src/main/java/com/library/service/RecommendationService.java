@@ -57,6 +57,10 @@ public class RecommendationService {
         List<Book> trending = trendingIds.isEmpty() ? Collections.emptyList() : bookRepository.findByIdIn(trendingIds);
         List<Book> newArrivals = bookRepository.findTop20ByOrderByCreatedAtDesc()
                 .stream().limit(limit).collect(Collectors.toList());
+        if (newArrivals.isEmpty()) {
+            newArrivals = bookRepository.findTop20ByOrderByIdDesc()
+                    .stream().limit(limit).collect(Collectors.toList());
+        }
         result.put("trending", trending);
         result.put("newArrivals", newArrivals);
         return result;

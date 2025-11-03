@@ -15,17 +15,25 @@ export async function apiRequest(path, options = {}) {
       headers,
     });
 
+    const contentType = response.headers.get('content-type') || '';
     const text = await response.text();
-    const data = text ? JSON.parse(text) : {};
-    
+    let data = {};
+    if (text) {
+      if (contentType.includes('application/json')) {
+        try { data = JSON.parse(text); } catch { data = {}; }
+      } else {
+        data = { message: text };
+      }
+    }
+
     if (!response.ok) {
       const message = data?.message || data?.error || `HTTP ${response.status}: ${response.statusText}`;
       throw new Error(message);
     }
-    
+
     return data;
   } catch (error) {
-    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+    if (error.name === 'TypeError' && (error.message.includes('fetch') || error.message.includes('Failed to fetch'))) {
       throw new Error('Network error: Unable to connect to server. Please check if the backend is running.');
     }
     throw error;

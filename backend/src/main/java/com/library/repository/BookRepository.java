@@ -42,6 +42,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByAuthorsExcluding(@Param("authors") List<String> authors, @Param("excludeIds") List<Long> excludeIds);
 
     List<Book> findTop20ByOrderByCreatedAtDesc();
+
+    List<Book> findTop20ByOrderByIdDesc();
 }
 
 
