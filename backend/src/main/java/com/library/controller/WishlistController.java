@@ -10,9 +10,13 @@ import com.library.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/wishlist")
@@ -28,14 +32,32 @@ public class WishlistController {
     @Autowired
     private UserService userService;
 
+    private List<Map<String, Object>> toDto(List<WishlistItem> items) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (WishlistItem wi : items) {
+            Map<String, Object> m = new HashMap<>();
+            m.put("id", wi.getId());
+            Map<String, Object> book = new HashMap<>();
+            book.put("id", wi.getBook().getId());
+            book.put("title", wi.getBook().getTitle());
+            book.put("author", wi.getBook().getAuthor());
+            book.put("barcode", wi.getBook().getBarcode());
+            book.put("isbn", wi.getBook().getIsbn());
+            m.put("book", book);
+            list.add(m);
+        }
+        return list;
+    }
+
     @GetMapping
-    public ResponseEntity<ApiResponse<List<WishlistItem>>> myWishlist(Authentication authentication) {
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> myWishlist(Authentication authentication) {
         LibraryUser user = userService.findByUsername(authentication.getName()).orElseThrow();
         List<WishlistItem> items = wishlistRepository.findByUserOrderByCreatedAtDesc(user);
-        return ResponseEntity.ok(ApiResponse.success("Wishlist loaded", items));
+        return ResponseEntity.ok(ApiResponse.success("Wishlist loaded", toDto(items)));
     }
 
     @PostMapping("/{barcode}")
+    @Transactional
     public ResponseEntity<ApiResponse<String>> addToWishlist(@PathVariable String barcode, Authentication authentication) {
         LibraryUser user = userService.findByUsername(authentication.getName()).orElseThrow();
         Book book = bookRepository.findByBarcode(barcode).orElseThrow(() -> new RuntimeException("Book not found"));
@@ -50,6 +72,7 @@ public class WishlistController {
     }
 
     @DeleteMapping("/{barcode}")
+    @Transactional
     public ResponseEntity<ApiResponse<String>> removeFromWishlist(@PathVariable String barcode, Authentication authentication) {
         LibraryUser user = userService.findByUsername(authentication.getName()).orElseThrow();
         Book book = bookRepository.findByBarcode(barcode).orElseThrow(() -> new RuntimeException("Book not found"));
