@@ -1,29 +1,24 @@
-# Use OpenJDK 17 as base image
-FROM openjdk:17-jdk-slim
-
-# Install Maven
-RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
-
-# Set working directory
+# ---------- Build stage ----------
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
-COPY mvnw .
-COPY .mvn .mvn
+# Copy Maven config and download deps first (better caching)
 COPY pom.xml .
+RUN mvn -q -DskipTests dependency:go-offline
 
-# Make Maven wrapper executable and fix line endings
-RUN chmod +x ./mvnw && \
-    sed -i 's/\r$//' ./mvnw
+# Copy sources and build
+COPY src ./src
+RUN mvn -DskipTests package
 
-# Copy source code
-COPY src src
+# ---------- Run stage ----------
+FROM eclipse-temurin:17-jre-jammy
+WORKDIR /app
 
-# Build the application using Maven directly
-RUN mvn clean package -DskipTests
+# Copy the fat jar from the build stage
+COPY --from=build /app/target/*-SNAPSHOT.jar app.jar
 
-# Expose port
+# Render provides $PORT; wire it to Spring Boot
+ENV PORT=8080
 EXPOSE 8080
 
-# Run the application
-CMD java -Dserver.port=${PORT:-8080} -jar target/library-system-backend-0.0.1-SNAPSHOT.jar
+CMD ["sh","-c","java -Dserver.port=${PORT} -jar app.jar"]
