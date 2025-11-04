@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import IssueBook from "./pages/IssueBook";
@@ -10,11 +10,18 @@ import Discover from "./pages/Discover";
 import ThemeToggle from "./components/ThemeToggle";
 import ProfileMenu from "./components/ProfileMenu";
 
+function ProfileGate() {
+  const location = useLocation();
+  const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+  if (!token || location.pathname === "/") return null;
+  return <ProfileMenu />;
+}
+
 function App() {
   return (
     <Router>
       <AnimatedBackground />
-      <ProfileMenu />
+      <ProfileGate />
       <Routes>
         <Route path="/" element={<Login />} />
 

@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { AuthApi } from "../api";
 
 export default function Login() {
-  const [username, setUsername] = useState("student1");
-  const [password, setPassword] = useState("pass123");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -56,6 +56,7 @@ export default function Login() {
                   placeholder="Username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="off"
                   required
                 />
               </div>
@@ -72,6 +73,7 @@ export default function Login() {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="new-password"
                   required
                 />
               </div>

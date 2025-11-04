@@ -27,6 +27,9 @@ export default function Dashboard() {
     navigate("/");
   };
 
+  const fmt = new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Kolkata' });
+  const formatIST = (dt) => (dt ? fmt.format(new Date(dt)) : "-");
+
   return (
     <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -115,9 +118,9 @@ export default function Dashboard() {
                         <td>{record.type}</td>
                         <td>{record.bookBarcode}</td>
                         <td>{record.bookTitle}</td>
-                        <td>{record.transactionDate ? new Date(record.transactionDate).toLocaleString() : "-"}</td>
-                        <td>{record.dueDate ? new Date(record.dueDate).toLocaleString() : "-"}</td>
-                        <td>{record.returnDate ? new Date(record.returnDate).toLocaleString() : "-"}</td>
+                        <td>{formatIST(record.transactionDate)}</td>
+                        <td>{formatIST(record.dueDate)}</td>
+                        <td>{formatIST(record.returnDate)}</td>
                         <td>{record.status}</td>
                       </tr>
                     ))}
