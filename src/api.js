@@ -78,6 +78,9 @@ export const BooksApi = {
   async myRequests() {
     return apiRequest(`/books/requests`);
   },
+  async available() {
+    return apiRequest(`/books/available`);
+  },
 };
 
 export const TransactionsApi = {

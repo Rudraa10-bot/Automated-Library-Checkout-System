@@ -2,30 +2,56 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RecommendationsApi, WishlistApi, BooksApi } from "../api";
 
+function dedupeById(list) {
+  const seen = new Set();
+  const out = [];
+  for (const b of list || []) {
+    const key = b.id || b.barcode || b.isbn;
+    if (!seen.has(key)) { seen.add(key); out.push(b); }
+  }
+  return out;
+}
+
 export default function Discover() {
   const navigate = useNavigate();
   const [data, setData] = useState({ trending: [], newArrivals: [] });
   const [error, setError] = useState("");
 
   useEffect(() => {
+    // show cached data immediately to avoid blank UI
+    try {
+      const cached = sessionStorage.getItem('discover_data');
+      if (cached) setData(JSON.parse(cached));
+    } catch {}
+
     async function load() {
       try {
         const res = await RecommendationsApi.discover();
         let payload = res?.data || { trending: [], newArrivals: [] };
-        // Fallbacks if empty
-        if ((!payload.trending || payload.trending.length === 0) || (!payload.newArrivals || payload.newArrivals.length === 0)) {
-          const all = await BooksApi.advancedSearch({ order: 'desc' });
-          const books = all?.data || [];
-          if (!payload.trending || payload.trending.length === 0) payload.trending = books.slice(0, 8);
-          if (!payload.newArrivals || payload.newArrivals.length === 0) payload.newArrivals = books.slice(0, 8);
+
+        // If any section empty, pull from available and generic search
+        if (!payload.trending || payload.trending.length < 8 || !payload.newArrivals || payload.newArrivals.length < 8) {
+          let extra = [];
+          try { const av = await BooksApi.available(); extra = (av?.data || []); } catch {}
+          if (extra.length < 8) {
+            try { const all = await BooksApi.search(""); extra = extra.concat(all?.data || []); } catch {}
+          }
+          const baseTrending = payload.trending || [];
+          const baseNew = payload.newArrivals || [];
+          payload.trending = dedupeById(baseTrending.concat(extra)).slice(0, 8);
+          payload.newArrivals = dedupeById(baseNew.concat(extra)).slice(0, 8);
         }
+
         setData(payload);
+        try { sessionStorage.setItem('discover_data', JSON.stringify(payload)); } catch {}
       } catch (e) {
         setError(e.message || "Failed to load discover");
-        // Last resort: pull from available
         try {
-          const avail = await BooksApi.search("");
-          setData({ trending: avail?.data?.slice(0, 8) || [], newArrivals: avail?.data?.slice(0, 8) || [] });
+          const av = await BooksApi.available();
+          const list = av?.data || [];
+          const payload = { trending: list.slice(0,8), newArrivals: list.slice(0,8) };
+          setData(payload);
+          sessionStorage.setItem('discover_data', JSON.stringify(payload));
         } catch { /* ignore */ }
       }
     }
