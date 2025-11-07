@@ -47,6 +47,12 @@ export const AuthApi = {
       body: JSON.stringify({ username, password }),
     });
   },
+  async register({ username, password, email, fullName }) {
+    return apiRequest("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ username, password, email, fullName, role: "STUDENT" }),
+    });
+  },
 };
 
 export const BooksApi = {

@@ -83,7 +83,9 @@ export default function Search() {
               <div className="text-muted">{book.author} • {book.publicationYear || "-"}</div>
               <div className="small">ISBN: {book.isbn}</div>
               <div className="mt-2">
-                <span className={`badge ${book.available ? 'bg-success' : 'bg-secondary'}`}>{book.available ? 'Available' : 'Unavailable'}</span>
+                {(() => { const isAvail = (book.status === 'AVAILABLE') && ((book.availableCopies ?? 0) > 0); return (
+                  <span className={`badge ${isAvail ? 'bg-success' : 'bg-secondary'}`}>{isAvail ? 'Available' : 'Unavailable'}</span>
+                ); })()}
               </div>
               <div className="mt-3 d-flex gap-2">
                 <button className="btn btn-sm btn-outline-secondary" onClick={()=>addWishlist(book.barcode)}>Add to wishlist</button>

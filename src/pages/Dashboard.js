@@ -27,8 +27,21 @@ export default function Dashboard() {
     navigate("/");
   };
 
-  const fmt = new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Kolkata' });
-  const formatIST = (dt) => (dt ? fmt.format(new Date(dt)) : "-");
+  const fmt = new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Kolkata', hour12: false });
+  const toDateUtc = (v) => {
+    if (!v) return null;
+    if (typeof v === 'number') return new Date(v);
+    if (typeof v === 'string') {
+      // If the string has no timezone info, treat as UTC
+      const hasTZ = /[zZ]|[+-]\d\d:?\d\d$/.test(v);
+      return new Date(hasTZ ? v : (v + 'Z'));
+    }
+    try { return new Date(v); } catch { return null; }
+  };
+  const formatIST = (dt) => {
+    const d = toDateUtc(dt);
+    return d ? fmt.format(d) : "-";
+  };
 
   return (
     <div className="container mt-5">
